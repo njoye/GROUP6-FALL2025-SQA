@@ -178,7 +178,7 @@ def runFameML(inp_dir, csv_fil):
 	df_list = [] 
 	list_subfolders_with_paths = [f.path for f in os.scandir(inp_dir) if f.is_dir()]
 	for subfolder in list_subfolders_with_paths: 
-		logging.debug(f"Retrieving files from {subfolder}")
+		logging.info(f"Retrieving files from {subfolder}")
 		events_with_dic =  getAllPythonFilesinRepo(subfolder)  
 		if subfolder not in output_event_dict:
 			output_event_dict[subfolder] = events_with_dic
