@@ -12,6 +12,7 @@ import os
 import pandas as pd
 import py_parser 
 import numpy as np 
+import logging
 
 
 def giveTimeStamp():
@@ -21,52 +22,66 @@ def giveTimeStamp():
   
 
 def getCSVData(dic_, dir_repo):
+	logging.info(f"Retrieving CSV Data from {dir_repo}")
+	
 	temp_list = []
 	for TEST_ML_SCRIPT in dic_:
 		# print(constants.ANALYZING_KW + TEST_ML_SCRIPT) 
 		# Section 1.1a
 		data_load_counta = lint_engine.getDataLoadCount( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Data Load Count for {dir_repo}")
 
 		# Section 1.1b
 		data_load_countb = lint_engine.getDataLoadCountb( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Data Load Count (B) for {dir_repo}")
 
 		# Section 1.1c
 		data_load_countc = lint_engine.getDataLoadCountc( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Data Load Count (C) for {dir_repo}")
 
 		# Section 1.2a
 		model_load_counta = lint_engine.getModelLoadCounta( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Model Load Count (A) for {dir_repo}")
 
 		# Section 1.2b
 		model_load_countb = lint_engine.getModelLoadCountb( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Model Load Count (B) for {dir_repo}")
 
 		# Section 1.2c
 		model_load_countc = lint_engine.getModelLoadCountc( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Model Load Count (C) for {dir_repo}")
 
 		# Section 1.2d
 		model_load_countd = lint_engine.getModelLoadCountd( TEST_ML_SCRIPT ) 
-
-		# Section 2.1a
+		logging.debug(f"Retrieved Model Load Count (D) for {dir_repo}")
+		
+  		# Section 2.1a
 		data_download_counta = lint_engine.getDataDownLoadCount( TEST_ML_SCRIPT ) 
-
+		logging.debug(f"Retrieved Data Download Count for {dir_repo}")
+  
 		# Section 2.1b
 		data_download_countb = lint_engine.getDataDownLoadCountb( TEST_ML_SCRIPT )
-
+		logging.debug(f"Retrieved Data Download Count (B) for {dir_repo}")
+  
 		# Section 3.1
 		# # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md
 		# model_feature_count = lint_engine.getModelFeatureCount( TEST_ML_SCRIPT ) 
 
 		# Section 3.2a
 		model_label_counta = lint_engine.getModelLabelCount( TEST_ML_SCRIPT ) 
-	
+		logging.debug(f"Retrieved Model Label Count (A) for {dir_repo}")
+
 		# Section 3.2b
 		# # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md
 		# model_label_countb = lint_engine.getModelLabelCountb( TEST_ML_SCRIPT ) 
 
 		# Section 3.3a
 		model_output_counta = lint_engine.getModelOutputCount( TEST_ML_SCRIPT ) 
-	
+		logging.debug(f"Retrieved Model Output Count (A) for {dir_repo}")
+
 		# Section 3.3b
 		model_output_countb = lint_engine.getModelOutputCountb( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Model Output Count (B) for {dir_repo}")
 
 		# Section 3.3c
 		# # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md
@@ -74,12 +89,15 @@ def getCSVData(dic_, dir_repo):
 
 		# Section 4.1
 		data_pipeline_counta = lint_engine.getDataPipelineCount( TEST_ML_SCRIPT ) 
-
-		# Section 4.2
+		logging.debug(f"Retrieved Data Pipeline Count (A) for {dir_repo}")
+		
+  		# Section 4.2
 		data_pipeline_countb = lint_engine.getDataPipelineCountb( TEST_ML_SCRIPT ) 
-
+		logging.debug(f"Retrieved Data Pipeline Count (B) for {dir_repo}")
+  
 		# Section 4.3
 		data_pipeline_countc = lint_engine.getDataPipelineCountc( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Data Pipeline Count (C) for {dir_repo}")
 
 		# Section 4.4
 		# # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md
@@ -87,6 +105,7 @@ def getCSVData(dic_, dir_repo):
 
 		# Section 5.1a
 		environment_counta = lint_engine.getEnvironmentCount( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved Environment Count for {dir_repo}")
 
 		# Section 5.1b
 		# # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md 
@@ -94,6 +113,7 @@ def getCSVData(dic_, dir_repo):
 
 		# Section 5.2
 		state_observe_count = lint_engine.getStateObserveCount( TEST_ML_SCRIPT ) 
+		logging.debug(f"Retrieved State Observe Count for {dir_repo}")
 
 		# Section 6.2 , skipping as syntax analysis will yield false positives 
 		# dnn_decision_countb = lint_engine.getDNNDecisionCountb( TEST_ML_SCRIPT ) 
@@ -128,7 +148,7 @@ def getCSVData(dic_, dir_repo):
 		total_event_count = data_load_count   + model_load_count    + data_download_count + \
 		                    model_label_count + model_output_count  + data_pipeline_count + \
 							environment_count + state_observe_count 
-		
+		logging.info(f"Total Security-Related Event Count: {total_event_count}")
 		the_tup = ( dir_repo, TEST_ML_SCRIPT, data_load_count, model_load_count, data_download_count, \
   				  model_label_count, model_output_count, data_pipeline_count, environment_count, state_observe_count, total_event_count )
 
@@ -138,6 +158,7 @@ def getCSVData(dic_, dir_repo):
   
   
 def getAllPythonFilesinRepo(path2dir):
+	logging.info(f"Retrieving all python files from {path2dir}")
 	valid_list = []
 	for root_, dirnames, filenames in os.walk(path2dir):
 		for file_ in filenames:
@@ -146,14 +167,18 @@ def getAllPythonFilesinRepo(path2dir):
 				if (file_.endswith( constants.PY_FILE_EXTENSION ) and (py_parser.checkIfParsablePython( full_path_file ) )   ):
 					valid_list.append(full_path_file) 
 	valid_list = np.unique(  valid_list )
+	logging.info(f"Retrieved {len(valid_list)} files from {path2dir}")
+	logging.debug(f"List of retrieved files from {path2dir}: {valid_list}")
 	return valid_list
 
 
 def runFameML(inp_dir, csv_fil):
+	logging.info(f"Running FameML (Input: {inp_dir}, CSV: {csv_fil})")
 	output_event_dict = {}
 	df_list = [] 
 	list_subfolders_with_paths = [f.path for f in os.scandir(inp_dir) if f.is_dir()]
 	for subfolder in list_subfolders_with_paths: 
+		logging.debug(f"Retrieving files from {subfolder}")
 		events_with_dic =  getAllPythonFilesinRepo(subfolder)  
 		if subfolder not in output_event_dict:
 			output_event_dict[subfolder] = events_with_dic

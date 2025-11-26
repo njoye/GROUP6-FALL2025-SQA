@@ -7,6 +7,7 @@ Executes the pattern matching and data flow analysis
 
 import py_parser
 import constants 
+import logging
 
 def getDataLoadCount( py_file ):
     data_load_count = 0 
@@ -385,9 +386,11 @@ def getDataDownLoadCountb( py_file ):
             
             
 def getModelFeatureCount( py_file ):
+    logging.info(f"Retrieving Model Feature Count for {py_file}")
     model_feature_count = 0 
     py_tree = py_parser.getPythonParseObject(py_file)
-    feature_list  = py_parser.getModelFeature( py_tree ) 
+    feature_list  = py_parser.getModelFeature( py_tree )
+    logging.debug(f"Feature List for {py_file}: {feature_list}")
     for feature_ in feature_list:
         lhs, class_name, feature_name, feature_line = feature_ 
         
@@ -397,6 +400,7 @@ def getModelFeatureCount( py_file ):
             
     LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData( py_tree, constants.DUMMY_LOG_KW ) 
     # print(LOGGING_IS_ON_FLAG,  model_feature_count) 
+    logging.info(f"Found {model_feature_count} model features in {py_file}")
     return model_feature_count
     
 
@@ -433,9 +437,11 @@ def getModelLabelCount( py_file ):
     
 
 def getModelLabelCountb( py_file ):
+    logging.info(f"Retrieving Model Label Count for {py_file}")
     model_label_countb = 0 
     py_tree = py_parser.getPythonParseObject(py_file)
     func_assign_list  = py_parser.getTupAssiDetails( py_tree ) 
+    logging.debug(f"Function Assign List for {py_file}: {func_assign_list}")
     for assign_ in func_assign_list:
         lhs, var_s, var_d, rhs_var_iter, func_line = assign_ 
         
@@ -443,10 +449,12 @@ def getModelLabelCountb( py_file ):
         
         	if ( (var_s == constants.SENT_KW ) and (var_d == constants.SENT_KW )  and (rhs_var_iter == constants.INPUT_BATCH_LIST_KW ) ):
         		model_label_countb += 1 
-        		print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LABEL, func_line , py_file  ) )
+                print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LABEL, func_line , py_file  ) )
             
     LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData( py_tree, constants.DUMMY_LOG_KW ) 
     # print(LOGGING_IS_ON_FLAG, model_label_countb) 
+    logging.info(f"Found {model_label_countb} model labels in {py_file}")
+
     return model_label_countb 
     
     
