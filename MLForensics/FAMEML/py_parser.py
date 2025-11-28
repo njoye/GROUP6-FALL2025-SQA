@@ -7,7 +7,7 @@ Parser needed to implement FAME-ML
 
 import ast 
 import os 
-from . import constants
+import constants
 
 
 def checkLoggingPerData(tree_object, name2track):
