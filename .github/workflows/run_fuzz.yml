@@ -1,0 +1,25 @@
+name: Execute Python Method
+
+# 1. Trigger: Run this on every push to the main branch
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest  # Runs on a Linux machine hosted by GitHub
+
+    steps:
+      # 2. Checkout: Download your code to the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 3. Setup: Install Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 4. Execute: Run the script
+      - name: Run the specific method
+        run: python fuzz.py
