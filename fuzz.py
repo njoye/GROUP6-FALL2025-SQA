@@ -28,7 +28,7 @@ def fuzz_getPythonParseObject():
 def fuzz_checkLoggingPerData():
     for _ in range(10):
         try:
-            checkLoggingPerData(random_string(10))
+            checkLoggingPerData(random_string(10), random_string())
         except Exception as e:
             print("checkLoggingPerData:", e)
 
